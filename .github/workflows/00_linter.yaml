@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.0
       - run: pip install yamllint==1.32.0
-      - run: yamllint --list-files -c .github/yamllint.yaml .
+      - run: yamllint --list-files .
 
   gitleaks:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
         with:
           image: ghcr.io/gitleaks/gitleaks:v8.18.0
           options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged
-          run: gitleaks detect --config .github/gitleaks.toml --verbose --source .
+          run: gitleaks detect --verbose --source .
 
   hadolint:
     runs-on: ubuntu-latest

@@ -11,6 +11,8 @@ ARG FUSE_VER=1.10-1
 # renovate: datasource=github-releases depName=NVIDIA/libnvidia-container
 ARG NVIDIA_CONTAINER_TOOLKIT_VER=1.14.3-1
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 RUN apt-get update \
  && apt-get install --no-install-recommends -y \
         "curl=${CURL_VER}" \

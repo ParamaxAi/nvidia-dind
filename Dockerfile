@@ -11,6 +11,9 @@ ARG FUSE_VER=1.10-1
 # renovate: datasource=github-releases depName=NVIDIA/libnvidia-container
 ARG NVIDIA_CONTAINER_TOOLKIT_VER=1.14.3-1
 
+# Add nvidia binaries from the host
+ENV PATH /usr/sbin:/usr/bin:/sbin:/bin:/usr/local/nvidia/bin/
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
@@ -33,20 +36,14 @@ RUN apt-get update \
         "docker.io=${DOCKER_VER}}" \
         "fuse-overlayfs=${FUSE_VER}}" \
         "nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VER}" \
- && rm -rf /var/lib/apt/list/*
-
+ && rm -rf /var/lib/apt/list/* \
 # Disable cgroups for Docker-IN-Docker
-RUN sed -e "s|#no-cgroups.*|no-cgroups = true|" \
-    -i /etc/nvidia-container-runtime/config.toml
-
-# Add nvidia binaries from the host
-ENV PATH /usr/sbin:/usr/bin:/sbin:/bin:/usr/local/nvidia/bin/
-
+ && sed -e "s|#no-cgroups.*|no-cgroups = true|" \
+    -i /etc/nvidia-container-runtime/config.toml \
 # Add nvidia libraries from the host
-RUN echo "/usr/local/nvidia/lib64" >/etc/ld.so.conf.d/nvidia.conf
-
+ && echo "/usr/local/nvidia/lib64" >/etc/ld.so.conf.d/nvidia.conf \
 # Docker requires iptables-legacy not iptables-nft (default)
-RUN update-alternatives --set iptables /usr/sbin/iptables-legacy
+ && update-alternatives --set iptables /usr/sbin/iptables-legacy
 
 COPY entrypoint.sh /entrypoint.sh
 

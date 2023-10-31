@@ -1,0 +1,20 @@
+---
+name: Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linter:
+    uses: ./.github/workflows/00_linter.yaml
+
+  build:
+    needs: test
+    uses: ./.github/workflows/01_build.yaml
+    permissions:
+      contents: read  # Required to checkout
+      packages: write # Required to push container image

@@ -1,0 +1,22 @@
+---
+name: Cleaner - container
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  cleaner-container:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Delete all untagged except latest untagged and main|buildcache
+        uses: actions/delete-package-versions@0d39a63126868f5eefaa47169615edd3c0f61e20 # v4.1.1
+        with:
+          package-name: nvidia-dind
+          package-type: container
+          min-versions-to-keep: 1
+          delete-only-untagged-versions: "true"
+          ignore-versions: '(main|buildcache)'

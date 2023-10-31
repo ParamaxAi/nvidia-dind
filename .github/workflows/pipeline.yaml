@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/00_linter.yaml
 
   build:
-    needs: test
+    needs: linter
     uses: ./.github/workflows/01_build.yaml
     permissions:
       contents: read  # Required to checkout

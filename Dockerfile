@@ -2,6 +2,8 @@ FROM docker.io/debian:12.2
 
 # renovate: datasource=repology depName=debian_12/curl versioning=loose
 ARG CURL_VER=7.88.1-10+deb12u4
+# renovate: datasource=repology depName=debian_12/ca-certificates versioning=loose
+ARG CA_CERTS_VER=20230311
 # renovate: datasource=repology depName=debian_12/gpg versioning=loose
 ARG GPG_VER=2.2.40-1.1
 # renovate: datasource=repology depName=debian_12/docker.io versioning=loose
@@ -17,8 +19,9 @@ ENV PATH /usr/sbin:/usr/bin:/sbin:/bin:/usr/local/nvidia/bin/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
- && apt-get install -y \
+ && apt-get install --no-install-recommends -y \
         "curl=${CURL_VER}" \
+        "ca-certificates=${CA_CERTS_VER}" \
         "gpg=${GPG_VER}" \
  && curl \
         --silent \

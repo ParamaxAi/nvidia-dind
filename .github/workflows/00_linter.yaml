@@ -1,0 +1,61 @@
+---
+name: Linter
+
+on:  # yamllint disable-line rule:truthy
+  workflow_call: # allow this workflow to be called from other workflows
+
+jobs:
+  codespell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.0
+      - uses: codespell-project/actions-codespell@v2.0
+        with:
+          check_filenames: true
+
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.0
+      - run: pip install yamllint==1.32.0
+      - run: yamllint --list-files .
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.0
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: ghcr.io/gitleaks/gitleaks:v8.18.0
+          options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged
+          run: gitleaks detect --verbose --source .
+
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.0
+      - uses: hadolint/hadolint-action@v3.1.0
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/koalaman/shellcheck-alpine:v0.9.0
+    steps:
+      - uses: actions/checkout@v4.1.0
+      - run: |
+          apk add shfmt
+          shellcheck --version
+          shfmt --version
+      - run: |
+          [ $(shfmt --list .) ] || exit 0
+          shellcheck $(shfmt --list .)
+
+  shfmt:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/mvdan/shfmt:v3.7.0-alpine
+    steps:
+      - uses: actions/checkout@v4.1.0
+      - run: |
+          shfmt --list .
+          shfmt --indent 4 --case-indent --diff .

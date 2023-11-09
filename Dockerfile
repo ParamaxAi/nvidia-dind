@@ -30,7 +30,8 @@ RUN apt-get update \
         https://download.docker.com/linux/debian/gpg \
         | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
  && arch=$(dpkg --print-architecture) \
- && version=$(. /etc/os-release && echo "$VERSION_CODENAME") \
+ # shellcheck source=/dev/null
+ && version=$(source /etc/os-release && echo "$VERSION_CODENAME") \
  && echo "deb [arch=$arch signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $version stable" \
     | tee /etc/apt/sources.list.d/docker.list \
  && curl \

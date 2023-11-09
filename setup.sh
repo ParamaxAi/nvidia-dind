@@ -19,20 +19,20 @@ apt-get update
 apt-get install --no-install-recommends -y \
     "curl=$CURL_VER" \
     "ca-certificates=$CA_CERTS_VER" \
-    "gpg=$GPG_VER" \
+    "gpg=$GPG_VER"
 
 # Docker repository
 curl \
     --silent \
     --location \
     --fail \
-    https://download.docker.com/linux/debian/gpg \
-    | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    https://download.docker.com/linux/debian/gpg |
+    gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
 arch=$(dpkg --print-architecture)
 version=$(source /etc/os-release && echo "$VERSION_CODENAME")
-echo "deb [arch=$arch signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $version stable" \
-| tee /etc/apt/sources.list.d/docker.list
+echo "deb [arch=$arch signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $version stable" |
+    tee /etc/apt/sources.list.d/docker.list
 
 # Nvidia repository
 curl \
@@ -46,9 +46,9 @@ curl \
     --silent \
     --location \
     --fail \
-    https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list \
-    | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' \
-    | tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list |
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' |
+    tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 
 apt-get update
 docker_ver=$(apt-cache madison docker-ce | grep "$DOCKER_VER" | cut -d "|" -f 2 | tr -d "[:blank:]")

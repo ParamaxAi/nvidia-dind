@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: paramaxai/nvidia-dind
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # Required to checkout

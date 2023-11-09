@@ -39,8 +39,8 @@ curl \
     --silent \
     --location \
     --fail \
-    https://nvidia.github.io/libnvidia-container/gpgkey \
-    | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+    https://nvidia.github.io/libnvidia-container/gpgkey |
+    gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
 
 curl \
     --silent \

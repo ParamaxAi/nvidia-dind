@@ -6,12 +6,12 @@ ARG CURL_VER=7.88.1-10+deb12u4
 ARG CA_CERTS_VER=20230311
 # renovate: datasource=repology depName=debian_12/gpg versioning=loose
 ARG GPG_VER=2.2.40-1.1
-# renovate: datasource=repology depName=debian_12/docker.io versioning=loose
-ARG DOCKER_VER=20.10.24+dfsg1-1+b3
 # renovate: datasource=repology depName=debian_12/fuse-overlayfs versioning=loose
 ARG FUSE_VER=1.10-1
+# renovate: datasource=github-releases depName=docker/cli
+ARG DOCKER_VER=24.0.7
 # renovate: datasource=github-releases depName=NVIDIA/libnvidia-container
-ARG NVIDIA_CONTAINER_TOOLKIT_VER=1.14.3-1
+ARG NVIDIA_CONTAINER_TOOLKIT_VER=1.14.3
 
 # Add nvidia binaries from the host
 ENV PATH /usr/sbin:/usr/bin:/sbin:/bin:/usr/local/nvidia/bin/
@@ -20,9 +20,19 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
  && apt-get install --no-install-recommends -y \
-        "curl=${CURL_VER}" \
-        "ca-certificates=${CA_CERTS_VER}" \
-        "gpg=${GPG_VER}" \
+        "curl=$CURL_VER" \
+        "ca-certificates=$CA_CERTS_VER" \
+        "gpg=$GPG_VER" \
+ && curl \
+        --silent \
+        --location \
+        --fail \
+        https://download.docker.com/linux/debian/gpg \
+        | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
+ && arch=$(dpkg --print-architecture) \
+ && version=$(. /etc/os-release && echo "$VERSION_CODENAME") \
+ && echo "deb [arch=$arch signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $version stable" \
+    | tee /etc/apt/sources.list.d/docker.list \
  && curl \
         --silent \
         --location \
@@ -37,10 +47,13 @@ RUN apt-get update \
         | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' \
         | tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
  && apt-get update \
+ && docker_ver=$(apt-cache madison docker-ce | grep "$DOCKER_VER" | cut -d "|" -f 2 | tr -d "[:blank:]") \
+ && nvidia_ver=$(apt-cache madison nvidia-container-toolkit | grep "${NVIDIA_CONTAINER_TOOLKIT_VER}" | cut -d "|" -f 2 | tr -d "[:blank:]") \
  && apt-get install --no-install-recommends -y \
-        "docker.io=${DOCKER_VER}" \
-        "fuse-overlayfs=${FUSE_VER}" \
-        "nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VER}" \
+        "docker-ce=$docker_ver" \
+        "fuse-overlayfs=$FUSE_VER" \
+        "nvidia-container-toolkit=$nvidia_ver" \
+ && apt-get clean \
  && rm -rf /var/lib/apt/list/* \
 # Disable cgroups for Docker-IN-Docker
  && sed -e "s|#no-cgroups.*|no-cgroups = true|" \

@@ -8,7 +8,7 @@ jobs:
   codespell:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - uses: codespell-project/actions-codespell@v2.0
         with:
           check_filenames: true
@@ -16,24 +16,24 @@ jobs:
   yamllint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.0
-      - run: pip install yamllint==1.32.0
+      - uses: actions/checkout@v4.1.1
+      - run: pip install yamllint==1.33.0
       - run: yamllint --list-files .
 
   gitleaks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - uses: addnab/docker-run-action@v3
         with:
-          image: ghcr.io/gitleaks/gitleaks:v8.18.0
+          image: ghcr.io/gitleaks/gitleaks:v8.18.1
           options: --volume ${{ github.workspace }}:/work:rw --workdir /work --privileged
           run: gitleaks detect --verbose --source .
 
   hadolint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - uses: hadolint/hadolint-action@v3.1.0
 
   shellcheck:
@@ -41,7 +41,7 @@ jobs:
     container:
       image: docker.io/koalaman/shellcheck-alpine:v0.9.0
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - run: |
           apk add shfmt
           shellcheck --version
@@ -55,7 +55,7 @@ jobs:
     container:
       image: docker.io/mvdan/shfmt:v3.7.0-alpine
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - run: |
           shfmt --list .
           shfmt --indent 4 --case-indent --diff .

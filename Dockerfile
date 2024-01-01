@@ -1,4 +1,4 @@
-FROM docker.io/debian:12.2
+FROM docker.io/debian:12.4
 
 # Add nvidia binaries from the host
 ENV PATH /usr/sbin:/usr/bin:/sbin:/bin:/usr/local/nvidia/bin/

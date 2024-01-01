@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # renovate: datasource=repology depName=debian_12/curl versioning=loose
-CURL_VER=7.88.1-10+deb12u4
+CURL_VER=7.88.1-10+deb12u5
 # renovate: datasource=repology depName=debian_12/ca-certificates versioning=loose
 CA_CERTS_VER=20230311
 # renovate: datasource=repology depName=debian_12/gpg versioning=loose

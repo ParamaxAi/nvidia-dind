@@ -6,8 +6,8 @@ set -euo pipefail
 CURL_VER=7.88.1-10+deb12u5
 # renovate: datasource=repology depName=debian_12/ca-certificates versioning=loose
 CA_CERTS_VER=20230311
-# renovate: datasource=repology depName=debian_12/gpg versioning=loose
-GPG_VER=2.2.40-1.1
+# renovate: datasource=repology depName=debian_12/gnupg versioning=loose
+GNUPG_VER=2.2.40-1.1
 # renovate: datasource=repology depName=debian_12/fuse-overlayfs versioning=loose
 FUSE_VER=1.10-1
 # renovate: datasource=github-releases depName=docker/cli
@@ -19,7 +19,7 @@ apt-get update
 apt-get install --no-install-recommends -y \
     "curl=$CURL_VER" \
     "ca-certificates=$CA_CERTS_VER" \
-    "gpg=$GPG_VER"
+    "gnupg=$GNUPG_VER"
 
 # Docker repository
 curl \

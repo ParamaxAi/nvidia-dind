@@ -13,7 +13,7 @@ FUSE_VER=1.10-1
 # renovate: datasource=github-releases depName=docker/cli
 DOCKER_VER=24.0.7
 # renovate: datasource=github-releases depName=NVIDIA/libnvidia-container
-NVIDIA_CONTAINER_TOOLKIT_VER=v1.14.4
+NVIDIA_CONTAINER_TOOLKIT_VER=1.14.4
 
 apt-get update
 apt-get install --no-install-recommends -y \

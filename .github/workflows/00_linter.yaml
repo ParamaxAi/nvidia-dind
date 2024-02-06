@@ -19,6 +19,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: pip install yamllint==1.34.0
       - run: yamllint --list-files .
+      - run: 'yamllint --config-data "{rules: {line-length: {max: 119}}}" .'
 
   gitleaks:
     runs-on: ubuntu-latest
@@ -39,21 +40,17 @@ jobs:
   shellcheck:
     runs-on: ubuntu-latest
     container:
-      image: docker.io/koalaman/shellcheck-alpine:v0.9.0@sha256:e19ed93c22423970d56568e171b4512c9244fc75dd9114045016b4a0073ac4b7
+      image: docker.io/koalaman/shellcheck-alpine:v0.9.0
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - run: |
-          apk add shfmt
-          shellcheck --version
-          shfmt --version
-      - run: |
-          [ $(shfmt --list .) ] || exit 0
-          shellcheck $(shfmt --list .)
+      - run: >
+          find . -not -path "./.git/**" -type f -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \;
+          -exec echo {} + -exec shellcheck --external-sources {} +
 
   shfmt:
     runs-on: ubuntu-latest
     container:
-      image: docker.io/mvdan/shfmt:v3.7.0-alpine@sha256:fc0a03bb9218218a387adabf09fa22d4a0206d094cf3326a21da34b30ff02ed9
+      image: docker.io/mvdan/shfmt:v3.7.0-alpine
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: |

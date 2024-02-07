@@ -40,7 +40,8 @@ jobs:
   shellcheck:
     runs-on: ubuntu-latest
     container:
-      image: docker.io/koalaman/shellcheck-alpine:v0.9.0
+      # yamllint disable rule:line-length
+      image: docker.io/koalaman/shellcheck-alpine:v0.9.0@sha256:e19ed93c22423970d56568e171b4512c9244fc75dd9114045016b4a0073ac4b7
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: >
@@ -50,7 +51,8 @@ jobs:
   shfmt:
     runs-on: ubuntu-latest
     container:
-      image: docker.io/mvdan/shfmt:v3.7.0-alpine
+      # yamllint disable rule:line-length
+      image: docker.io/mvdan/shfmt:v3.7.0-alpine@sha256:fc0a03bb9218218a387adabf09fa22d4a0206d094cf3326a21da34b30ff02ed9
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: |
